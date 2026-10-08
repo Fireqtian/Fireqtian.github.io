@@ -1,41 +1,582 @@
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>我的个人主页</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 800px;
-      margin: 80px auto;
-      padding: 0 20px;
-      line-height: 1.8;
-      color: #333;
-    }
-    h1, h2 { color: #234b79; }
-    a { color: #2878bd; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>论文标题占位符 — 项目主页</title>
+<style>
+  :root{
+    --bg:#F0EEE6;
+    --bg-soft:#FAF9F5;
+    --ink:#191919;
+    --ink-2:#3D3D38;
+    --ink-soft:#6F6E66;
+    --line:#DFDBD1;
+    --line-strong:#CFC9BC;
+    --accent:#D97757;
+    --accent-soft:#F4E4DC;
+    --radius:14px;
+    --maxw:1060px;
+    --font-sans:"Styrene B",-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    --font-serif:"Tiempos Text","Iowan Old Style",Georgia,"Songti SC",serif;
+    --font-mono:"SF Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+
+  *,*::before,*::after{box-sizing:border-box;}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--font-sans);
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+  a{color:inherit;}
+  section{scroll-margin-top:84px;}
+
+  .container{max-width:var(--maxw);margin:0 auto;padding:0 24px;}
+  .container.narrow{max-width:740px;}
+
+  /* ---------- 顶部导航 ---------- */
+  .nav{
+    position:sticky;top:0;z-index:50;
+    background:rgba(240,238,230,.85);
+    backdrop-filter:blur(14px) saturate(160%);
+    -webkit-backdrop-filter:blur(14px) saturate(160%);
+    border-bottom:1px solid rgba(25,25,25,.07);
+  }
+  .nav-inner{
+    max-width:var(--maxw);margin:0 auto;padding:0 24px;height:62px;
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+  }
+  .brand{
+    display:flex;align-items:center;gap:10px;text-decoration:none;
+    font-weight:600;font-size:15px;letter-spacing:-.01em;
+  }
+  .brand-dot{width:10px;height:10px;border-radius:50%;background:var(--accent);display:block;flex:none;}
+  .nav-links{display:flex;align-items:center;gap:26px;}
+  .nav-links a{
+    color:var(--ink-soft);text-decoration:none;font-size:14.5px;
+    transition:color .18s ease;
+  }
+  .nav-links a:hover{color:var(--ink);}
+  .nav-links a.nav-cta{
+    background:var(--ink);color:#fff;padding:7px 15px;border-radius:8px;
+    font-size:14px;font-weight:500;transition:background .18s ease;
+  }
+  .nav-links a.nav-cta:hover{background:#000;color:#fff;}
+  @media (max-width:720px){
+    .nav-links a:not(.nav-cta){display:none;}
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{padding:104px 0 76px;text-align:center;}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:12.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;
+    color:var(--accent);background:var(--accent-soft);
+    border:1px solid rgba(217,119,87,.25);
+    padding:5px 13px;border-radius:999px;
+  }
+  h1{
+    margin:26px auto 0;max-width:900px;
+    font-size:clamp(2.05rem,5.2vw,3.4rem);
+    line-height:1.12;letter-spacing:-.028em;font-weight:600;
+  }
+  .lede{
+    max-width:640px;margin:22px auto 0;
+    font-size:clamp(1rem,1.6vw,1.15rem);line-height:1.65;color:var(--ink-soft);
+  }
+  .authors{
+    margin-top:36px;display:flex;flex-wrap:wrap;justify-content:center;
+    gap:8px 22px;font-size:15.5px;font-weight:500;
+  }
+  .authors sup{color:var(--accent);font-weight:700;font-size:.66em;margin-left:1px;}
+  .affil{margin-top:12px;font-size:13.5px;color:var(--ink-soft);}
+  .affil sup{color:var(--accent);font-weight:700;}
+
+  .actions{
+    margin-top:38px;display:flex;flex-wrap:wrap;justify-content:center;gap:10px;
+  }
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:10px 18px;border-radius:9px;
+    border:1px solid var(--line-strong);background:var(--bg-soft);
+    color:var(--ink);text-decoration:none;
+    font-size:14.5px;font-weight:500;
+    transition:background .18s ease,border-color .18s ease,transform .18s ease,color .18s ease;
+  }
+  .btn:hover{background:#fff;border-color:var(--ink);transform:translateY(-1px);}
+  .btn-primary{background:var(--ink);border-color:var(--ink);color:#fff;}
+  .btn-primary:hover{background:#000;border-color:#000;color:#fff;}
+
+  /* ---------- 通用区块 ---------- */
+  .section{padding:78px 0;}
+  .section + .section{border-top:1px solid var(--line);}
+  .section-title{
+    margin:0 0 24px;
+    font-size:12.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;
+    color:var(--accent);
+  }
+  .section-sub{margin:-14px 0 26px;font-size:15px;color:var(--ink-soft);max-width:560px;}
+
+  /* ---------- 摘要 ---------- */
+  .abstract-text{
+    margin:0;
+    font-family:var(--font-serif);
+    font-size:clamp(1.05rem,1.75vw,1.24rem);
+    line-height:1.8;color:var(--ink-2);
+  }
+
+  /* ---------- 贡献卡片 ---------- */
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;}
+  .card{
+    background:var(--bg-soft);border:1px solid var(--line);border-radius:var(--radius);
+    padding:24px 22px;
+    transition:border-color .22s ease,transform .22s ease,box-shadow .22s ease;
+  }
+  .card:hover{
+    border-color:var(--line-strong);transform:translateY(-2px);
+    box-shadow:0 14px 34px -26px rgba(25,25,25,.5);
+  }
+  .card-num{
+    display:block;margin-bottom:14px;
+    font-family:var(--font-mono);font-size:12px;color:var(--accent);letter-spacing:.05em;
+  }
+  .card h3{margin:0 0 8px;font-size:16px;font-weight:600;letter-spacing:-.012em;}
+  .card p{margin:0;font-size:14.5px;line-height:1.68;color:var(--ink-soft);}
+
+  /* ---------- Demo 窗口 ---------- */
+  .demo-window{
+    border:1px solid var(--line-strong);border-radius:16px;overflow:hidden;
+    background:var(--bg-soft);
+    box-shadow:0 22px 60px -34px rgba(25,25,25,.45);
+  }
+  .demo-bar{
+    height:42px;display:flex;align-items:center;gap:7px;padding:0 16px;
+    background:#E8E5DB;border-bottom:1px solid var(--line);
+  }
+  .dot{width:10px;height:10px;border-radius:50%;background:#CFC9BC;flex:none;}
+  .demo-url{
+    margin-left:14px;flex:1;max-width:440px;
+    font-family:var(--font-mono);font-size:12.5px;color:var(--ink-soft);
+    background:rgba(255,255,255,.65);padding:4px 12px;border-radius:6px;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .demo-body{display:grid;grid-template-columns:250px 1fr;min-height:430px;}
+  @media (max-width:760px){
+    .demo-body{grid-template-columns:1fr;}
+    .demo-panel{border-right:none;border-bottom:1px solid var(--line);}
+  }
+  .demo-panel{
+    padding:22px;border-right:1px solid var(--line);background:#F5F3EC;
+    display:flex;flex-direction:column;gap:13px;
+  }
+  .skel{
+    height:11px;border-radius:6px;background:#E3DFD4;
+    animation:pulse 2.2s ease-in-out infinite;
+  }
+  .skel.head{height:15px;background:#D8D3C6;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.45;}}
+  .demo-btn{
+    margin-top:auto;background:var(--accent);color:#fff;text-align:center;
+    padding:10px;border-radius:8px;font-size:14px;font-weight:600;
+  }
+  .demo-stage{padding:28px;display:flex;}
+  .stage-box{
+    width:100%;min-height:340px;border:1.5px dashed var(--line-strong);border-radius:12px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;
+    color:var(--ink-soft);text-align:center;padding:32px;
+    background:repeating-linear-gradient(45deg,#FAF9F5,#FAF9F5 12px,#F6F4EE 12px,#F6F4EE 24px);
+  }
+  .stage-icon{
+    width:46px;height:46px;border-radius:50%;
+    background:var(--accent-soft);color:var(--accent);
+    display:grid;place-items:center;font-size:15px;padding-left:3px;
+  }
+  .stage-box p{margin:0;font-size:15px;font-weight:500;color:var(--ink-2);}
+  .stage-hint{
+    font-family:var(--font-mono);font-size:12.5px;color:var(--ink-soft);
+    background:rgba(255,255,255,.7);padding:4px 10px;border-radius:6px;
+  }
+  .demo-note{margin:16px 0 0;font-size:13.5px;color:var(--ink-soft);}
+  .demo-note code{
+    font-family:var(--font-mono);font-size:12.5px;
+    background:rgba(25,25,25,.06);padding:2px 6px;border-radius:5px;
+  }
+
+  /* ---------- 图表 ---------- */
+  .chart{
+    background:var(--bg-soft);border:1px solid var(--line);border-radius:var(--radius);
+    padding:30px 26px 22px;
+  }
+  .chart-bars{display:flex;align-items:flex-end;gap:clamp(12px,4vw,44px);}
+  .chart-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:10px;min-width:0;}
+  .bar-wrap{height:190px;width:100%;display:flex;align-items:flex-end;justify-content:center;}
+  .bar{
+    width:100%;max-width:74px;height:0;border-radius:8px 8px 4px 4px;background:#D6D2C7;
+    transition:height .9s cubic-bezier(.2,.8,.2,1);
+  }
+  .bar-accent{background:var(--accent);}
+  .chart-label{
+    font-size:12.5px;color:var(--ink-soft);text-align:center;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;
+  }
+  .chart-caption{
+    margin:22px 0 0;padding-top:16px;border-top:1px solid var(--line);
+    font-size:13px;color:var(--ink-soft);
+  }
+
+  /* ---------- 数字统计 ---------- */
+  .stats{
+    margin-top:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:1px;background:var(--line);border:1px solid var(--line);
+    border-radius:var(--radius);overflow:hidden;
+  }
+  .stat{background:var(--bg-soft);padding:26px 22px;}
+  .stat-num{
+    font-size:clamp(1.6rem,3.4vw,2.1rem);font-weight:600;
+    letter-spacing:-.03em;color:var(--accent);line-height:1.1;
+  }
+  .stat-label{margin-top:8px;font-size:13.5px;color:var(--ink-soft);}
+
+  /* ---------- 引用 ---------- */
+  .cite-box{
+    position:relative;background:#1C1B19;border-radius:var(--radius);
+    padding:24px;overflow:auto;
+  }
+  .cite-box pre{
+    margin:0;font-family:var(--font-mono);font-size:13px;line-height:1.75;
+    color:#D9D5CC;white-space:pre;
+  }
+  .copy-btn{
+    position:absolute;top:14px;right:14px;
+    background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);
+    color:#EDEAE3;font-family:var(--font-sans);font-size:12.5px;
+    padding:6px 12px;border-radius:7px;cursor:pointer;
+    transition:background .18s ease;
+  }
+  .copy-btn:hover{background:rgba(255,255,255,.2);}
+  .copy-btn.done{background:var(--accent);border-color:var(--accent);color:#fff;}
+
+  /* ---------- 页脚 ---------- */
+  .footer{border-top:1px solid var(--line);padding:38px 0 58px;}
+  .footer-inner{
+    max-width:var(--maxw);margin:0 auto;padding:0 24px;
+    display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;align-items:center;
+    font-size:13.5px;color:var(--ink-soft);
+  }
+  .footer a{color:var(--ink-soft);text-decoration:none;border-bottom:1px solid var(--line-strong);}
+  .footer a:hover{color:var(--ink);border-color:var(--ink);}
+
+  /* ---------- 入场动画 ---------- */
+  .reveal{opacity:0;transform:translateY(16px);transition:opacity .65s ease,transform .65s ease;}
+  .reveal.in{opacity:1;transform:none;}
+  .reveal.d1{transition-delay:.08s;}
+  .reveal.d2{transition-delay:.16s;}
+  .reveal.d3{transition-delay:.24s;}
+  @media (prefers-reduced-motion:reduce){
+    .reveal{opacity:1;transform:none;transition:none;}
+    .bar{transition:none;}
+    html{scroll-behavior:auto;}
+  }
+</style>
 </head>
 <body>
-  <h1>你的名字</h1>
-  <p>研究生 | 人工智能 | 多模态大模型</p>
 
-  <h2>About Me</h2>
-  <p>欢迎来到我的个人主页！</p>
+<!-- ============ 顶部导航 ============ -->
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="#top">
+      <span class="brand-dot"></span>
+      <span>论文标题占位符</span>
+    </a>
+    <nav class="nav-links">
+      <a href="#abstract">摘要</a>
+      <a href="#contributions">贡献</a>
+      <a href="#demo">演示</a>
+      <a href="#results">结果</a>
+      <a class="nav-cta" href="#demo">打开 Demo</a>
+    </nav>
+  </div>
+</header>
 
-  <h2>Research Interests</h2>
-  <ul>
-    <li>Multimodal Large Language Models</li>
-    <li>Video Understanding</li>
-    <li>Visual Token Compression</li>
-  </ul>
+<main id="top">
 
-  <h2>Publications</h2>
-  <p>Coming soon...</p>
+  <!-- ============ Hero ============ -->
+  <section class="hero">
+    <div class="container">
+      <div class="eyebrow reveal">Preprint · 2026 · 占位符</div>
 
-  <h2>Contact</h2>
-  <p>Email: your-email@example.com</p>
+      <h1 class="reveal d1">论文标题占位符：<br>一个面向 XXX 任务的新方法</h1>
+
+      <p class="lede reveal d2">
+        副标题占位符 —— 用一两句话讲清楚：这篇论文解决了什么问题、用了什么方法、
+        相比现有工作好在哪里。读者扫一眼就该知道这篇论文值不值得往下看。
+      </p>
+
+      <div class="authors reveal d2">
+        <span>作者一<sup>1</sup></span>
+        <span>作者二<sup>1</sup></span>
+        <span>作者三<sup>2</sup></span>
+        <span>作者四<sup>1</sup></span>
+        <span>通讯作者<sup>1</sup></span>
+      </div>
+
+      <div class="affil reveal d2">
+        <sup>1</sup>某某大学计算机学院 &nbsp;·&nbsp; <sup>2</sup>某某研究院
+      </div>
+
+      <div class="actions reveal d3">
+        <a class="btn btn-primary" href="#">论文 PDF ↗</a>
+        <a class="btn" href="#">arXiv ↗</a>
+        <a class="btn" href="#demo">在线 Demo ↓</a>
+        <a class="btn" href="#">代码仓库 ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 摘要 ============ -->
+  <section class="section" id="abstract">
+    <div class="container narrow">
+      <h2 class="section-title reveal">摘要</h2>
+      <p class="abstract-text reveal d1">
+        【占位符】这里放 150–250 字的摘要。建议结构：第一句说明研究背景与现有方法的不足；
+        第二句提出你的方法（一句话概括核心思想）；第三句说明你做了什么实验、在哪些数据集上
+        取得了什么效果；最后一句点明该工作的意义。摘要里不要出现公式和引用编号，保持可读性。
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ 核心贡献 ============ -->
+  <section class="section" id="contributions">
+    <div class="container">
+      <h2 class="section-title reveal">核心贡献</h2>
+      <div class="cards">
+        <div class="card reveal">
+          <span class="card-num">01</span>
+          <h3>贡献点占位符</h3>
+          <p>用一到两句话描述第一个贡献。比如：我们提出了一个 XXX 框架，首次把 A 和 B 结合起来。</p>
+        </div>
+        <div class="card reveal d1">
+          <span class="card-num">02</span>
+          <h3>贡献点占位符</h3>
+          <p>用一到两句话描述第二个贡献。比如：我们设计了一个 XXX 模块，在保持效率的同时提升了精度。</p>
+        </div>
+        <div class="card reveal d2">
+          <span class="card-num">03</span>
+          <h3>贡献点占位符</h3>
+          <p>用一到两句话描述第三个贡献。比如：我们在 N 个基准上做了充分实验，平均提升 X%。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 演示 ============ -->
+  <section class="section" id="demo">
+    <div class="container">
+      <h2 class="section-title reveal">交互式演示</h2>
+      <p class="section-sub reveal">在浏览器里直接跑，不用装任何东西。</p>
+
+      <div class="demo-window reveal d1">
+        <div class="demo-bar">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          <span class="demo-url">https://demo.example.com/your-project</span>
+        </div>
+
+        <div class="demo-body">
+          <!-- 左侧：参数面板（骨架屏） -->
+          <aside class="demo-panel">
+            <div class="skel head" style="width:52%"></div>
+            <div class="skel" style="width:100%"></div>
+            <div class="skel" style="width:78%"></div>
+            <div class="skel" style="width:88%"></div>
+            <div class="skel" style="width:62%"></div>
+            <div class="skel head" style="width:40%;margin-top:14px"></div>
+            <div class="skel" style="width:92%"></div>
+            <div class="skel" style="width:70%"></div>
+            <div class="demo-btn">运行</div>
+          </aside>
+
+          <!-- 右侧：演示舞台 -->
+          <div class="demo-stage">
+            <div class="stage-box">
+              <div class="stage-icon">▶</div>
+              <p>在这里嵌入你的 Demo</p>
+              <span class="stage-hint">&lt;iframe src="..."&gt; 或一段屏幕录制</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="demo-note reveal d1">
+        提示：把右侧的虚线框替换成 <code>&lt;iframe&gt;</code>、<code>&lt;video&gt;</code>
+        或 <code>&lt;canvas&gt;</code> 即可。
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ 结果 ============ -->
+  <section class="section" id="results">
+    <div class="container">
+      <h2 class="section-title reveal">实验结果</h2>
+
+      <div class="chart reveal d1">
+        <div class="chart-bars">
+          <div class="chart-col">
+            <div class="bar-wrap"><div class="bar" data-h="46%"></div></div>
+            <span class="chart-label">基线 A</span>
+          </div>
+          <div class="chart-col">
+            <div class="bar-wrap"><div class="bar" data-h="58%"></div></div>
+            <span class="chart-label">基线 B</span>
+          </div>
+          <div class="chart-col">
+            <div class="bar-wrap"><div class="bar" data-h="67%"></div></div>
+            <span class="chart-label">基线 C</span>
+          </div>
+          <div class="chart-col">
+            <div class="bar-wrap"><div class="bar bar-accent" data-h="84%"></div></div>
+            <span class="chart-label">我们的方法</span>
+          </div>
+          <div class="chart-col">
+            <div class="bar-wrap"><div class="bar bar-accent" data-h="95%"></div></div>
+            <span class="chart-label">我们的方法 + XXX</span>
+          </div>
+        </div>
+        <p class="chart-caption">
+          图 1（占位符）：在 XXX 数据集上的主实验结果。纵轴为 XXX 指标，数值越高越好。
+        </p>
+      </div>
+
+      <div class="stats reveal d2">
+        <div class="stat">
+          <div class="stat-num">+0.0</div>
+          <div class="stat-label">相对最强基线的提升</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">0.0×</div>
+          <div class="stat-label">推理速度提升</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">0</div>
+          <div class="stat-label">评测基准数量</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 引用 ============ -->
+  <section class="section" id="citation">
+    <div class="container narrow">
+      <h2 class="section-title reveal">引用</h2>
+      <div class="cite-box reveal d1">
+        <button class="copy-btn" type="button">复制 BibTeX</button>
+        <pre class="bibtex">@article{yourname2026placeholder,
+  title   = {论文标题占位符：一个面向 XXX 任务的新方法},
+  author  = {作者一 and 作者二 and 作者三 and 作者四},
+  journal = {arXiv preprint arXiv:XXXX.XXXXX},
+  year    = {2026}
+}</pre>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ 页脚 ============ -->
+<footer class="footer">
+  <div class="footer-inner">
+    <span>© 2026 论文标题占位符 · 保留所有权利</span>
+    <span>
+      <a href="#">GitHub</a> &nbsp;·&nbsp;
+      <a href="#">联系作者</a> &nbsp;·&nbsp;
+      <a href="#top">回到顶部 ↑</a>
+    </span>
+  </div>
+</footer>
+
+<script>
+  /* ---------- 滚动入场 ---------- */
+  (function () {
+    var items = document.querySelectorAll('.reveal');
+    if (!('IntersectionObserver' in window)) {
+      items.forEach(function (el) { el.classList.add('in'); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    items.forEach(function (el) { io.observe(el); });
+  })();
+
+  /* ---------- 柱状图生长 ---------- */
+  (function () {
+    var bars = document.querySelectorAll('.bar');
+    if (!bars.length) return;
+    if (!('IntersectionObserver' in window)) {
+      bars.forEach(function (b) { b.style.height = b.dataset.h; });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        var bar = entry.target;
+        var delay = Array.prototype.indexOf.call(bars, bar) * 90;
+        setTimeout(function () { bar.style.height = bar.dataset.h; }, delay);
+        io.unobserve(bar);
+      });
+    }, { threshold: 0.4 });
+    bars.forEach(function (b) { io.observe(b); });
+  })();
+
+  /* ---------- 复制 BibTeX ---------- */
+  (function () {
+    var btn = document.querySelector('.copy-btn');
+    if (!btn) return;
+    var original = btn.textContent;
+
+    btn.addEventListener('click', function () {
+      var text = document.querySelector('.bibtex').innerText;
+
+      var done = function () {
+        btn.textContent = '已复制 ✓';
+        btn.classList.add('done');
+        setTimeout(function () {
+          btn.textContent = original;
+          btn.classList.remove('done');
+        }, 1800);
+      };
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done).catch(function () {
+          fallback(text, done);
+        });
+      } else {
+        fallback(text, done);
+      }
+    });
+
+    function fallback(text, done) {
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); done(); } catch (e) { /* 忽略 */ }
+      document.body.removeChild(ta);
+    }
+  })();
+</script>
+
 </body>
 </html>
